@@ -1,4 +1,4 @@
-# Terra Station Desktop
+# Rebel Station Desktop
 
 Standalone desktop wallet application for [Rebel Station](https://github.com/terra-rebels/station).
 
