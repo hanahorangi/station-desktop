@@ -26,7 +26,7 @@ const createWindow = () => {
 
   const url = isLocal
     ? `https://localhost:${process.env.PORT || 3000}`
-    : 'https://station.terra.money'
+    : 'https://station.terrarebels.net'
 
   win = new BrowserWindow(config)
   win.removeMenu()
