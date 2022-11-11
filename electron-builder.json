@@ -1,6 +1,6 @@
 {
-  "appId": "money.terra.station",
-  "productName": "Terra Station",
+  "appId": "net.terrarebels.station",
+  "productName": "Rebel Station",
   "copyright": "Copyright © 2019-present ${author}",
   "mac": {
     "category": "public.app-category.financial",
@@ -19,10 +19,18 @@
     "window": {
       "width": 540,
       "height": 370
-    }
+    },
+    "writeUpdateInfo": false
+  },
+  "linux": {
+    "target": [ "deb", "rpm" ],
+    "category": "Utility"
   },
   "win": {
     "target": "nsis"
+  },
+  "nsis": {
+	  "differentialPackage": false,
   },
   "files": ["public/**/*", "node_modules/**/*"]
 }

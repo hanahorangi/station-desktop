@@ -1,6 +1,6 @@
-# Terra Station Desktop
+# Rebel Station Desktop
 
-Standalone desktop wallet application for [Terra Station](https://github.com/terra-money/station).
+Standalone desktop wallet application for [Rebel Station](https://github.com/terra-rebels/station).
 
 ## Prerequisites
 * Install Node.js LTS (https://nodejs.org/en/)
