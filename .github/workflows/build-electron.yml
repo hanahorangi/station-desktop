@@ -1,51 +1,46 @@
-# This is a basic workflow to help you get started with Actions
+name: Build Electron
 
-name: Build Electron (Linux)
-
-# Controls when the action will run. 
 on:
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build-linux:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-20.04
+  release:
+    runs-on: ${{ matrix.os }}
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+      fail-fast: false
+
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - name: Check out Git repository
+        uses: actions/checkout@v1
 
-      - name: Use Node.js
-        uses: actions/setup-node@v2.1.5
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
         with:
-          node-version: 14.15.4
-          architecture: x64
+          node-version: 15
 
-      - name: Install system dependencies
+      - name: Build Ubuntu
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
-            sudo apt install libusb-1.0-0 libusb-1.0-0-dev
-            sudo dpkg -i ext-deps/libudev1_245.4-4ubuntu3.5_amd64.deb
-            sudo dpkg -i ext-deps/libudev-dev_245.4-4ubuntu3.5_amd64.deb
-
-
-      - name: Cache node modules
-        uses: actions/cache@v2
+          sudo apt update && sudo apt install libudev-dev libusb-1.0-0-dev
+          npm i
+          npm run deploy-linux
         env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      
-      - name: Install NPM dependencies
-        run: yarn
-      
-      - name: Build for Linux
-        run: yarn build-linux
+          GH_TOKEN: ${{ secrets.github_token }}
+      - name: Build Macos
+        if: ${{ matrix.os == 'macos-latest' }}
+        run: |
+          brew install libusb-compat
+          npm i
+          PYTHON_PATH=$(which python) npm run deploy-mac
+        env:
+          GH_TOKEN: ${{ secrets.github_token }}
+      - name: Build Windows
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          npm i
+          npm run deploy-win
+        env:
+          GH_TOKEN: ${{ secrets.github_token }}
